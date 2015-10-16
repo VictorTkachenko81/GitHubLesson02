@@ -17,9 +17,14 @@
 
     <b>{{ presetNameTable }}</b>
 
+    For editing values - double click on values.
+    For save - push enter.
+    Then click - apply for save to file.
+
+
     <form method="post" action="?preset={{ presetNameTable }}&q=update">
 
-        <input type="submit" value="Выполнить">
+        <input type="submit" value="Apply">
         <table>
             <tr>
                 <td>&nbsp;</td>
@@ -58,7 +63,7 @@
             <input type="hidden" name="originalname" value="{{ origanalNameForForm }}">
 
         </table>
-        <input type="submit" value="Выполнить">
+        <input type="submit" value="Apply">
     </form>
 
     <script src="skins/script.js"></script>
