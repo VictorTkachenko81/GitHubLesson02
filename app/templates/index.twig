@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RayStar Editor</title>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="skins/style.css"/>
+</head>
+<body>
+
+{% for presetName in presetNameArray %}
+    <a href="?preset={{ presetName|e }}">{{ presetName|e }}</a>
+{% endfor %}
+
+<br />
+
+<b>{{ presetNameTable }}</b>
+
+<form method="post" action="?preset={{ presetNameTable }}&q=update">
+
+    <input type="submit" value="Выполнить">
+    <table>
+        <tr>
+            <td>&nbsp;</td>
+            {% for keyTime, timePreset in timePresetData %}
+                <td>
+                    <input title="time" type="text" name="time[{{ keyTime }}]" value="{{ timePreset }}">
+                    <div class="valueblock">{{ timePreset }}</div>
+                </td>
+            {% endfor %}
+
+            <!--$timePrev == "" ? $timePrev = $valueTime : null;-->
+            <!--strtotime($timePrev) > strtotime($valueTime) ? $timeWarning = "style=\"background-color:red;\"" : $timeWarning = "";-->
+            <!--$timePrev = $valueTime;-->
+            <!--<td><input type="text" name="time[$keyTime]" value="$valueTime"><div class="valueblock" $timeWarning>$valueTime</div></td>-->
+
+        </tr>
+
+        {% for keyColor, color in colorArray %}
+            <tr>
+                <td>
+                    {{ color.name }}
+                    ({{ color.wave }})
+                </td>
+                {% for i in 1..20 %}
+                    <td>
+                        <div class="levelblock" style="background-color:{{ color.color }}">
+                            <div class="level"
+                                 style="height:{{ 100 - (presetValuesData[i][keyColor] / 255 * 100)|round }}%"></div>
+                        </div>
+                        <div class="valuecontainer">
+                            <input title="level" type="text" name="level[{{ i }}][{{ keyColor }}]"
+                                   value="{{ (presetValuesData[i][keyColor] / 255 * 100)|round }}">
+
+                            <div class="valueblock">{{ (presetValuesData[i][keyColor] / 255 * 100)|round }}</div>
+                        </div>
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+
+        <input type="hidden" name="originaldata" value="{{ origanalStringForForm }}">
+        <input type="hidden" name="originalname" value="{{ origanalNameForForm }}">
+
+    </table>
+    <input type="submit" value="Выполнить">
+</form>
+
+<script src="skins/script.js"></script>
+</body>
+</html>

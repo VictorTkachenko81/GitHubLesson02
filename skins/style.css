@@ -1,0 +1,27 @@
+td {
+    border: 1px solid #C0C0C0;
+}
+
+td input {
+    display: none;
+    width: 42px;
+}
+
+.valuecontainer {
+    height: 22px;
+}
+
+.valueblock {
+    margin: 0 auto;
+}
+
+.levelblock {
+    display: block;
+    width: 45px;
+    height: 80px;
+}
+
+.level {
+    width: 100%;
+    background-color: white;
+}
