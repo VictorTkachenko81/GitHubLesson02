@@ -7,6 +7,9 @@
  * Time: 14:54
  */
 
+use Knp\Menu\MenuFactory;
+
+
 class Raystar
 {
     public $filename = "RayStar.ini";
@@ -99,8 +102,74 @@ class Raystar
     public $origanalNameForForm;
     public $presetName;
     public $respond;
+    public $rendererMenu;
+    public $menuData;
 
-    public function readFile($editPresetName = 'factory'){
+    public function compare($a, $b)
+    {
+        if ($a['sort'] == $b['sort']) {
+            return 0;
+        }
+        return ($a['sort'] < $b['sort']) ? -1 : 1;
+    }
+
+    public function run()
+    {
+        if (isset($_GET['q']) == "update") {
+            $this->updateFile();
+            echo "<b>Procesing save</b><br />";
+            echo $this->respond . "<br />";
+        }
+
+        $editPresetName = (isset($_GET['preset']) != "") ? $_GET['preset'] : "";
+        $this->readFile($editPresetName);
+
+        $this->getTemplate();
+    }
+
+    public function updateFile()
+    {
+        $timeData = $_POST['time'];
+        $levelData = $_POST['level'];
+        $updatedData = $_POST['originalname'];
+
+        for ($i = 1; $i <= 20; $i++) {
+            $updatedData = $updatedData . ";" . $i . "," . $timeData[$i];
+            $levelPeriod = $levelData[$i];
+            ksort($levelPeriod);
+            foreach ($levelPeriod as $value) {
+                $valueData = round(255 * $value / 100, 0);
+                if ($valueData > 255) {
+                    $valueData = 255;
+                }
+                $updatedData = $updatedData . "," . $valueData;
+            }
+        }
+
+        $updatedData = $updatedData . ";";
+
+
+        if (trim($_POST['originaldata']) == trim($updatedData)) {
+            $this->respond = "Nothing is changed";
+        } else {
+            $fp = fopen($this->filename, 'r');
+            $contents = fread($fp, filesize($this->filename));
+            fclose($fp);
+
+            $contentsUpdated = str_replace(trim($_POST['originaldata']), trim($updatedData), $contents);
+
+            $fp = fopen($this->filename, 'w');
+            fwrite($fp, $contentsUpdated);
+            fclose($fp);
+
+            $this->respond = "Data was changed";
+        }
+
+        return $this->respond;
+    }
+
+    public function readFile($editPresetName = 'factory')
+    {
 
         $datafile = file($this->filename);
 
@@ -152,58 +221,46 @@ class Raystar
 
     }
 
-    public function updateFile()
-    {
-            $timeData = $_POST['time'];
-            $levelData = $_POST['level'];
-            $updatedData = $_POST['originalname'];
-
-            for ($i = 1; $i <= 20; $i++) {
-                $updatedData = $updatedData . ";" . $i . "," . $timeData[$i];
-                $levelPeriod = $levelData[$i];
-                ksort($levelPeriod);
-                foreach ($levelPeriod as $value) {
-                    $valueData = round(255 * $value / 100, 0);
-                    if ($valueData > 255) {
-                        $valueData = 255;
-                    }
-                    $updatedData = $updatedData . "," . $valueData;
-                }
-            }
-
-            $updatedData = $updatedData . ";";
-
-
-            if (trim($_POST['originaldata']) == trim($updatedData)) {
-                $this->respond = "Nothing is changed";
-            } else {
-                $fp = fopen($this->filename, 'r');
-                $contents = fread($fp, filesize($this->filename));
-                fclose($fp);
-
-                $contentsUpdated = str_replace(trim($_POST['originaldata']), trim($updatedData), $contents);
-
-                $fp = fopen($this->filename, 'w');
-                fwrite($fp, $contentsUpdated);
-                fclose($fp);
-
-                $this->respond = "Data was changed";
-            }
-
-        return $this->respond;
-    }
-
     public function sortColor()
     {
         uasort($this->color, array($this, 'compare'));
         return $this->color;
     }
 
-    public function compare($a, $b)
+    public function creatMenu()
     {
-        if ($a['sort'] == $b['sort']) {
-            return 0;
+        $factory = new MenuFactory();
+        $itemMatcher = new \Knp\Menu\Matcher\Matcher();
+        $renderer = new \Knp\Menu\Renderer\ListRenderer($itemMatcher);
+
+        $menu = $factory->createItem('My menu');
+
+        foreach ($this->presetName as $url) {
+            $menu->addChild($url, array('uri' => '?preset=' . $url));
         }
-        return ($a['sort'] < $b['sort']) ? -1 : 1;
+
+        $this->rendererMenu = $renderer;
+        $this->menuData = $menu;
+
+        return $this;
+    }
+
+    public function getTemplate()
+    {
+        $loader = new Twig_Loader_Filesystem('app/templates');
+        $twig = new Twig_Environment($loader, array('debug' => true));
+        $template = $twig->loadTemplate('index.twig');
+        echo $template->render(array(
+                'presetNameTable' => $this->presetNameTable,
+                'presetNameArray' => $this->presetName,
+                'timePresetData' => $this->timePresetData,
+                'colorArray' => $this->sortColor(),
+                'presetValuesData' => $this->presetValues,
+                'origanalStringForForm' => $this->origanalStringForForm,
+                'origanalNameForForm' => $this->origanalNameForForm,
+                'renderer' => $this->creatMenu()->rendererMenu,
+                'menu' => $this->creatMenu()->menuData,
+            )
+        );
     }
 }
