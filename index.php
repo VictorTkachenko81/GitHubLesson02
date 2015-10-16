@@ -6,11 +6,13 @@
  * Time: 15:39
  */
 require_once 'vendor/autoload.php';
-
-
-
-
 require_once 'app/scr/raystar.php';
+
+use Symfony\Component\Debug\Debug;
+use Knp\Menu\MenuFactory;
+
+Debug::enable();
+
 $ray = new Raystar();
 
 if (isset($_GET['q']) == "update") {
@@ -24,8 +26,20 @@ $ray->readFile($editPresetName);
 
 $loader = new Twig_Loader_Filesystem('app/templates');
 $twig = new Twig_Environment($loader, array('debug' => true));
-$template = $twig->loadTemplate('index.twig');
 
+
+$factory = new MenuFactory();
+$menu = $factory->createItem('My menu');
+
+$url = '';
+foreach ($ray->presetName as $url) {
+    $menu->addChild($url, array('uri' => '?preset=' . $url));
+}
+$itemMatcher = new \Knp\Menu\Matcher\Matcher();
+$renderer = new \Knp\Menu\Renderer\ListRenderer($itemMatcher);
+
+
+$template = $twig->loadTemplate('index.twig');
 echo $template->render(array(
         'presetNameTable' => $ray->presetNameTable,
         'presetNameArray' => $ray->presetName,
@@ -34,5 +48,7 @@ echo $template->render(array(
         'presetValuesData' => $ray->presetValues,
         'origanalStringForForm' => $ray->origanalStringForForm,
         'origanalNameForForm' => $ray->origanalNameForForm,
+        'renderer' => $renderer,
+        'menu' => $menu,
     )
 );

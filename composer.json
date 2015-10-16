@@ -1,5 +1,19 @@
 {
+    "name": "RayStar Editor",
+    "description": "PHP App for editing presets of LED-light levels.",
+    "authors":[
+        {
+            "name": "Victor Tkachenko",
+            "email": "tkachenko.victor.ukr@gmail.com"
+        }
+    ],
     "require": {
-        "twig/twig": "~1.0"
+        "php": ">=5.5.0",
+        "twig/twig": "~1.0",
+        "symfony/debug": "^2.7",
+        "knplabs/knp-menu": "^2.1"
+    },
+    "require-dev": {
+        "ext-xdebug": "*"
     }
 }

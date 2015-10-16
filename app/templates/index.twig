@@ -8,64 +8,62 @@
 </head>
 <body>
 
-{% for presetName in presetNameArray %}
-    <a href="?preset={{ presetName|e }}">{{ presetName|e }}</a>
-{% endfor %}
+{{ renderer.render(menu) | raw }}
 
-<br />
+<br/>
 
-<b>{{ presetNameTable }}</b>
 
-<form method="post" action="?preset={{ presetNameTable }}&q=update">
+{% if presetNameTable %}
 
-    <input type="submit" value="Выполнить">
-    <table>
-        <tr>
-            <td>&nbsp;</td>
-            {% for keyTime, timePreset in timePresetData %}
-                <td>
-                    <input title="time" type="text" name="time[{{ keyTime }}]" value="{{ timePreset }}">
-                    <div class="valueblock">{{ timePreset }}</div>
-                </td>
-            {% endfor %}
+    <b>{{ presetNameTable }}</b>
 
-            <!--$timePrev == "" ? $timePrev = $valueTime : null;-->
-            <!--strtotime($timePrev) > strtotime($valueTime) ? $timeWarning = "style=\"background-color:red;\"" : $timeWarning = "";-->
-            <!--$timePrev = $valueTime;-->
-            <!--<td><input type="text" name="time[$keyTime]" value="$valueTime"><div class="valueblock" $timeWarning>$valueTime</div></td>-->
+    <form method="post" action="?preset={{ presetNameTable }}&q=update">
 
-        </tr>
-
-        {% for keyColor, color in colorArray %}
+        <input type="submit" value="Выполнить">
+        <table>
             <tr>
-                <td>
-                    {{ color.name }}
-                    ({{ color.wave }})
-                </td>
-                {% for i in 1..20 %}
+                <td>&nbsp;</td>
+                {% for keyTime, timePreset in timePresetData %}
                     <td>
-                        <div class="levelblock" style="background-color:{{ color.color }}">
-                            <div class="level"
-                                 style="height:{{ 100 - (presetValuesData[i][keyColor] / 255 * 100)|round }}%"></div>
-                        </div>
-                        <div class="valuecontainer">
-                            <input title="level" type="text" name="level[{{ i }}][{{ keyColor }}]"
-                                   value="{{ (presetValuesData[i][keyColor] / 255 * 100)|round }}">
-
-                            <div class="valueblock">{{ (presetValuesData[i][keyColor] / 255 * 100)|round }}</div>
-                        </div>
+                        <input title="time" type="text" name="time[{{ keyTime }}]" value="{{ timePreset }}">
+                        <div class="valueblock">{{ timePreset }}</div>
                     </td>
                 {% endfor %}
             </tr>
-        {% endfor %}
 
-        <input type="hidden" name="originaldata" value="{{ origanalStringForForm }}">
-        <input type="hidden" name="originalname" value="{{ origanalNameForForm }}">
+            {% for keyColor, color in colorArray %}
+                <tr>
+                    <td>
+                        {{ color.name }}
+                        ({{ color.wave }})
+                    </td>
+                    {% for i in 1..20 %}
+                        <td>
+                            <div class="levelblock" style="background-color:{{ color.color }}">
+                                <div class="level"
+                                     style="height:{{ 100 - (presetValuesData[i][keyColor] / 255 * 100)|round }}%"></div>
+                            </div>
+                            <div class="valuecontainer">
+                                <input title="level" type="text" name="level[{{ i }}][{{ keyColor }}]"
+                                       value="{{ (presetValuesData[i][keyColor] / 255 * 100)|round }}">
 
-    </table>
-    <input type="submit" value="Выполнить">
-</form>
+                                <div class="valueblock">{{ (presetValuesData[i][keyColor] / 255 * 100)|round }}</div>
+                            </div>
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
 
-<script src="skins/script.js"></script>
+            <input type="hidden" name="originaldata" value="{{ origanalStringForForm }}">
+            <input type="hidden" name="originalname" value="{{ origanalNameForForm }}">
+
+        </table>
+        <input type="submit" value="Выполнить">
+    </form>
+
+    <script src="skins/script.js"></script>
+
+{% endif %}
+
 </body>
 </html>
