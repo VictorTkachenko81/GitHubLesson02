@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "08daa41b415e0efeb2beda9d15b8245e",
-    "content-hash": "209ef4acad37f3ab9af70443915318a3",
+    "hash": "28b8402674097a5fccbf53d6f659dcb9",
+    "content-hash": "0a954266f04e3edcdda83d8694e7b51f",
     "packages": [
         {
             "name": "knplabs/knp-menu",
@@ -233,6 +233,8 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=5.5.0"
+    },
     "platform-dev": []
 }

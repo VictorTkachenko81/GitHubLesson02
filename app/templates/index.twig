@@ -15,11 +15,13 @@
 
 {% if presetNameTable %}
 
-    <b>{{ presetNameTable }}</b>
+    <b>Now editing preset: {{ presetNameTable }}</b>
 
-    For editing values - double click on values.
-    For save - push enter.
-    Then click - apply for save to file.
+    <div>
+        For editing values - double click on values.<br />
+        For save - push enter.<br />
+        Then click "apply" for save to file.<br />
+    </div>
 
 
     <form method="post" action="?preset={{ presetNameTable }}&q=update">

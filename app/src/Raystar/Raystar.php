@@ -7,6 +7,8 @@
  * Time: 14:54
  */
 
+namespace Raystar;
+
 use Knp\Menu\MenuFactory;
 
 
@@ -123,7 +125,7 @@ class Raystar
 
         $editPresetName = (isset($_GET['preset']) != "") ? $_GET['preset'] : "";
         $this->readFile($editPresetName);
-
+//        echo "Test";
         $this->getTemplate();
     }
 
@@ -247,8 +249,8 @@ class Raystar
 
     public function getTemplate()
     {
-        $loader = new Twig_Loader_Filesystem('app/templates');
-        $twig = new Twig_Environment($loader, array('debug' => true));
+        $loader = new \Twig_Loader_Filesystem('app/templates');
+        $twig = new \Twig_Environment($loader, array('debug' => true));
         $template = $twig->loadTemplate('index.twig');
         echo $template->render(array(
                 'presetNameTable' => $this->presetNameTable,

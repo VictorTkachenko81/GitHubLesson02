@@ -7,9 +7,10 @@
  */
 
 require_once 'vendor/autoload.php';
-require_once 'app/scr/raystar.php';
 
+use Raystar\Raystar;
 use Symfony\Component\Debug\Debug;
+
 Debug::enable();
 
 $ray = new Raystar();

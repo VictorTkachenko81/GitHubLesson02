@@ -13,7 +13,7 @@
         "symfony/debug": "^2.7",
         "knplabs/knp-menu": "^2.1"
     },
-    "require-dev": {
-        "ext-xdebug": "*"
+    "autoload": {
+        "psr-0": { "Raystar": "app/src" }
     }
 }
